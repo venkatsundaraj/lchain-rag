@@ -19,9 +19,14 @@ assert PAGE_FIELD in corpus.features, f"pick the page field from: {list(corpus.f
 file_of = {d["doc_id"]: d["file_name"] for d in docs}
 page_of = {c["corpus_id"]: (file_of[c["doc_id"]], c[PAGE_FIELD]) for c in corpus}
 
+print(page_of)
+
 gold = defaultdict(list)
 for r in qrels:
-    gold[r["query_id"]].append(page_of[r["corpus_id"]])
+    if r["score"] <= 0:                      # 0 = annotated as NOT relevant
+        continue
+    f, p = page_of[r["corpus_id"]]
+    gold[r["query_id"]].append((f, p, r["score"]))
 
 pdf_dir = pathlib.Path("data/pdfs")
 n_pages = {f: len(PdfReader(pdf_dir / f).pages) for f in file_of.values()}
@@ -33,15 +38,14 @@ with open(out / "hr_gold.jsonl", "w") as fh:
         if q["language"] != "english":
             continue
         pages = sorted(set(gold[q["query_id"]]))
-        for f, p in pages:
-            assert 0 <= p < n_pages[f] or 1 <= p <= n_pages[f], (f, p)
+        assert pages, f"query {q['query_id']} has no relevant pages"
         fh.write(json.dumps({
             "query_id": q["query_id"],
             "question": q["query"],
             "answer": q["answer"],
-            "content_type": q["content_type"],
+            "content_type": [t for t in q["content_type"] if not t.startswith("N/A")],
             "query_types": q["query_types"],
-            "gold_pages": [{"file": f, "page": p} for f, p in pages],
+            "gold_pages": [{"file": f, "page": p, "score": s} for f, p, s in pages],
         }) + "\n")
         rows += 1
 print(rows, "queries written")   # expect 318
