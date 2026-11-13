@@ -35,7 +35,15 @@ if __name__ == "__main__":
     # print(m)
     gold = defaultdict(list)
     gold = {"one":[1, 2, 3], "two":[4, 6, 7]}
-    for i in a:
-        print(i, a[i], len(a))
+    # for i in a:
+    #     print(i, a[i], len(a))
+
+    x = {"hello"}
+    y = {"world", "heddllo"}
+
+    if x <= y:
+        print(True)
+    else:
+        print(False)
 
     
