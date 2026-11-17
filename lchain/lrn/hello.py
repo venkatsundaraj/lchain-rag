@@ -18,7 +18,7 @@ if __name__ == "__main__":
          ]
 
     d = {c["corpus_id"]: a[c["doc_id"]] for c in b}
-    print(settings.OPENAI_API_KEY)
+    # print(settings.OPENAI_API_KEY)
     chunks = []
     chunk_one = []
     for i in a:
@@ -38,12 +38,22 @@ if __name__ == "__main__":
     # for i in a:
     #     print(i, a[i], len(a))
 
-    x = {"hello"}
-    y = {"world", "heddllo"}
+    x = {"world", "hello"}
+    y = {"world", "hello", "hello"}
+    # print(sorted(x & y))
+    # if y <= x:
+    #     print(True)
 
-    if x <= y:
-        print(True)
-    else:
-        print(False)
+    rows = [1, 2, 3, 1, 2, 4]
+    rows_v1 = [0, "", None, " ", 5]
+    hit_at_k = sum(rows)/len(rows)
+
+    print(hit_at_k)
+
+    item = next((i+1 for i, p in enumerate(x) if p in y), None)
+
+    
+    # print(item)
+    # print(any([i for i in rows if i == 10] or [bool(j) for j in rows_v1]))
 
     
