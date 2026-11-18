@@ -17,8 +17,11 @@ Metrics follow trec_eval / MTEB, which the ViDoRe paper reports:
 
 from dataclasses import dataclass
 from pathlib import Path
+import math
 import json
+from datetime import datetime, timezone
 from collections import defaultdict
+from app.langchain.helpers.metrics import dedupe_keep_order, first_hit_rank, recall_at_k, ndcg_at_k, dcg
 
 DATA = Path("data/vidore_hr")
 REPO = "vidore/vidore_v3_hr"
@@ -30,7 +33,7 @@ class Catelog:
     page_of:dict[str, tuple[str, int]]
     id_of:dict[tuple[str, int], str]
     qrels:dict[str, tuple[str, int]]
-    quries:dict[str, dict]
+    queries:dict[str, dict]
 
     def corpus_id_of(self, file_name:str, page:int):
         return self.id_of.get(file_name, page)
@@ -41,8 +44,8 @@ class Catelog:
         if cache.exists():
             raw = json.loads(cache.read_text())
             return cls(
-                page_of={k:tuple(v) for k, v in raw["page_of"]}.items(),
-                int_of={(f, p):cid for cid, (f,p) in ((k, tuple(v)) for k, v in raw["page_of"].items())},
+                page_of={k: tuple(v) for k, v in raw["page_of"].items()},
+                id_of={(f, p):cid for cid, (f,p) in ((k, tuple(v)) for k, v in raw["page_of"].items())},
                 qrels={q: {c:int(r) for c, r in d.items()} for q,d in raw["qrels"].items()},
                 queries=raw["queries"]
             )
@@ -59,12 +62,13 @@ class Catelog:
         qd = defaultdict(dict)
 
         for q in qrels:
-            qd[str(q["query_id"])[q["corpus_id"]]] = q[int["score"]]
+            if int(q["score"]) > 0:
+                qd[str(q["query_id"])][q["corpus_id"]] = int(q["score"])
 
         qr = {str(q["query_id"]): {"query":q["query"], "answer":q.get('answer'), "content_type":q.get('content_type'), "query_types": q.get("query_types")} for q in queries}
 
         DATA.mkdir(parents=True, exist_ok=True)
-        cache.write_text({"page_of":page_of, "qrels":qd, "queries":qr}, ensure_ascii=False)
+        cache.write_text(json.dumps({"page_of": page_of, "qrels": qd, "queries": qr}, ensure_ascii=False))
         return cls.load()
 
 
@@ -84,9 +88,107 @@ def dump_page_images():
     print(f"{len(corpus)} page images in {out}")
 
 
+
+VISUAL = {"Chart", "Table", "Infographic", "Image"}
+
+
+def score_run(rows:list[dict], catelog:Catelog, ks = (5, 10), config:dict | None = None):
+    prep_q, groups = [], defaultdict(list)
+
+    for r in rows:
+        qid = str(r["query_id"]); rels = catelog.qrels.get(qid, {})
+        if not rels:
+            continue
+
+        ranked = dedupe_keep_order(r["ranked"])
+        m = {"query_id":qid, "n_gold":len(rels), "first_hit_rank":first_hit_rank(ranked, rels)}
+
+        for k in ks:
+            m[f"ndcg_at_{k}"] = ndcg_at_k(ranked, rels, k)
+            m[f"recall_at_{k}"] = recall_at_k(ranked, rels, k)
+
+        prep_q.append(m)
+        q = catelog.quries.get(qid)
+        types = str(q.get('content_type') or [])
+
+        groups["text_only" if types <= {"Text", "Other"} else "has_visual"].append(m)
+
+        for t in type & VISUAL:
+            groups[f"has_{t.lower()}"].append(m)
+
+        for qt in q.get("query_type") or []:
+            groups[f"q_{qt}"].append(m)
+
+        groups[f"n_gold_{min(len(rels), 4)}{'+' if len(rels) >= 4 else ''}"].append(m)
+
+        
+
+
+
+    def agg(ms):
+        n = len(ms)
+        out = {"n":n}
+
+        for k in ks:
+            out[f"ndcg@{k}"] = round(sum(x[f"ndcg@{k}"] for x in ms) / n, 4)
+            out[f"recall@{k}"] = round(sum(x[f"recall@{k}"] for x in ms) / n, 4)
+        out["mrr"] = round(sum(1 / x["first_hit_rank"] for x in ms if x["first_hit_rank"]) / n)
+
+        return out
+
+    return {"config":config, "aggregates":agg(prep_q), "rows":prep_q, "by_group":{g:agg(ms) for g, ms in sorted(groups.items())}}
+
+def save_run(result: dict, name: str) -> Path:
+    RUNS.mkdir(exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    p = RUNS / f"{stamp}_{name}.json"
+    result["config"]["timestamp"] = datetime.now(timezone.utc).isoformat()
+    p.write_text(json.dumps(result, indent=2, ensure_ascii=False))
+    return p
+
+def print_report(result: dict, k: int = 10) -> None:
+    a = result["aggregates"]
+    print(f"\nn={a['n']}  nDCG@{k}={a[f'ndcg@{k}']:.3f}  recall@{k}={a[f'recall@{k}']:.3f}  MRR={a['mrr']:.3f}")
+    for g, s in result["by_group"].items():
+        print(f"  {g:14s} n={s['n']:4d}  nDCG@{k}={s[f'ndcg@{k}']:.3f}  recall@{k}={s[f'recall@{k}']:.3f}")
+
+def _tests() -> None:
+    rels = {"A": 2, "B": 1, "C": 1}             # 3 relevant pages, one of them "fully"
+    # perfect order: A, B, C -> nDCG 1
+    assert abs(ndcg_at_k(["A", "B", "C"], rels, 10) - 1.0) < 1e-9
+    # swap A and B: DCG = 1/log2(2) + 2/log2(3) + 1/log2(4); IDCG = 2 + 1/log2(3) + 1/2
+    got = ndcg_at_k(["B", "A", "C"], rels, 10)
+    exp = (1 + 2 / math.log2(3) + 0.5) / (2 + 1 / math.log2(3) + 0.5)
+    assert abs(got - exp) < 1e-9, (got, exp)
+    # nothing relevant in top-k
+    assert ndcg_at_k(["X", "Y"], rels, 10) == 0.0
+    # k cuts both the list and the ideal
+    assert abs(ndcg_at_k(["A"], rels, 1) - 1.0) < 1e-9
+    # recall
+    assert abs(recall_at_k(["A", "X", "C"], rels, 3) - 2 / 3) < 1e-9
+    assert recall_at_k(["X"], rels, 5) == 0.0
+    # dedupe keeps first occurrence and order
+    assert dedupe_keep_order(["A", "A", "B", "A", "C"]) == ["A", "B", "C"]
+    # first hit
+    assert first_hit_rank(["X", "B"], rels) == 2 and first_hit_rank(["X"], rels) is None
+    print("metrics ok")
+
 if __name__ == "__main__":
-    cat = Catelog.load()
-    
+    import sys
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "test"
+    if cmd == "test":
+        _tests()
+    elif cmd == "dump":
+        cat = Catelog.load()
+        print(f"{len(cat.page_of)} pages, {len(cat.qrels)} queries with qrels, "
+              f"{sum(len(v) for v in cat.qrels.values())} graded pairs")
+        dump_page_images()
+    elif cmd == "score":
+        cat = Catelog.load()
+        rows = [json.loads(l) for l in Path(sys.argv[2]).read_text().splitlines() if l.strip()]
+        res = score_run(rows, cat, config={"source": sys.argv[2]})
+        print_report(res)
+        print("saved:", save_run(res, Path(sys.argv[2]).stem))
 
 
 
