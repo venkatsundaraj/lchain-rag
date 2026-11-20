@@ -29,47 +29,46 @@ REV = "main"
 RUNS = Path("vidore_runs")
 
 @dataclass
-class Catelog:
-    page_of:dict[str, tuple[str, int]]
-    id_of:dict[tuple[str, int], str]
-    qrels:dict[str, tuple[str, int]]
-    queries:dict[str, dict]
-
-    def corpus_id_of(self, file_name:str, page:int):
-        return self.id_of.get(file_name, page)
-
+class Catalog:
+    page_of: dict[str, tuple[str, int]]          # corpus_id -> (file_name, page_number_in_doc)
+    id_of: dict[tuple[str, int], str]            # (file_name, page) -> corpus_id
+    qrels: dict[str, dict[str, int]]             # query_id -> {corpus_id: rel}
+    queries: dict[str, dict]                     # query_id -> {query, answer, content_type, query_types}
+ 
+    def corpus_id_of(self, file_name: str, page: int) -> str | None:
+        return self.id_of.get((file_name, page))
+ 
     @classmethod
-    def load(cls) -> "Catelog":
-        cache = DATA / "catelog.json"
+    def load(cls) -> "Catalog":
+        cache = DATA / "catalog.json"
         if cache.exists():
             raw = json.loads(cache.read_text())
             return cls(
                 page_of={k: tuple(v) for k, v in raw["page_of"].items()},
-                id_of={(f, p):cid for cid, (f,p) in ((k, tuple(v)) for k, v in raw["page_of"].items())},
-                qrels={q: {c:int(r) for c, r in d.items()} for q,d in raw["qrels"].items()},
-                queries=raw["queries"]
+                id_of={(f, p): cid for cid, (f, p) in ((k, tuple(v)) for k, v in raw["page_of"].items())},
+                qrels={q: {c: int(r) for c, r in d.items()} for q, d in raw["qrels"].items()},
+                queries=raw["queries"],
             )
-
         from datasets import load_dataset
-
-        corpus  = load_dataset(REPO, "corpus", split="test", revision=REV).remove_columns(["image"])
+ 
+        corpus = load_dataset(REPO, "corpus", split="test", revision=REV).remove_columns("image")
+        docs = load_dataset(REPO, "documents_metadata", split="test", revision=REV)
+        qrels = load_dataset(REPO, "qrels", split="test", revision=REV)
         queries = load_dataset(REPO, "queries", split="test", revision=REV)
-        qrels   = load_dataset(REPO, "qrels", split="test", revision=REV)
-        docs    = load_dataset(REPO, "documents_metadata", split="test", revision=REV)
-
+ 
         file_of = {d["doc_id"]: d["file_name"] for d in docs}
-        page_of = {c["corpus_id"]:(file_of[c["doc_id"]], c["page_number_in_doc"]) for c in corpus}
-        qd = defaultdict(dict)
-
-        for q in qrels:
-            if int(q["score"]) > 0:
-                qd[str(q["query_id"])][q["corpus_id"]] = int(q["score"])
-
-        qr = {str(q["query_id"]): {"query":q["query"], "answer":q.get('answer'), "content_type":q.get('content_type'), "query_types": q.get("query_types")} for q in queries}
-
+        page_of = {c["corpus_id"]: (file_of[c["doc_id"]], int(c["page_number_in_doc"])) for c in corpus}
+        qd: dict[str, dict[str, int]] = defaultdict(dict)
+        for r in qrels:
+            if int(r["score"]) > 0:
+                qd[str(r["query_id"])][r["corpus_id"]] = int(r["score"])
+        qs = {str(q["query_id"]): {"query": q["query"], "answer": q.get("answer"),
+                                   "content_type": q.get("content_type"), "query_types": q.get("query_types")}
+              for q in queries}
         DATA.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps({"page_of": page_of, "qrels": qd, "queries": qr}, ensure_ascii=False))
+        cache.write_text(json.dumps({"page_of": page_of, "qrels": qd, "queries": qs}, ensure_ascii=False))
         return cls.load()
+ 
 
 
 def dump_page_images():
@@ -92,51 +91,39 @@ def dump_page_images():
 VISUAL = {"Chart", "Table", "Infographic", "Image"}
 
 
-def score_run(rows:list[dict], catelog:Catelog, ks = (5, 10), config:dict | None = None):
-    prep_q, groups = [], defaultdict(list)
-
+def score_run(rows: list[dict], cat: Catalog, ks=(5, 10), config: dict | None = None) -> dict:
+    per_q, groups = [], defaultdict(list)
     for r in rows:
-        qid = str(r["query_id"]); rels = catelog.qrels.get(qid, {})
+        qid = str(r["query_id"]); rels = cat.qrels.get(qid, {})
         if not rels:
             continue
-
         ranked = dedupe_keep_order(r["ranked"])
-        m = {"query_id":qid, "n_gold":len(rels), "first_hit_rank":first_hit_rank(ranked, rels)}
-
+        m = {"query_id": qid, "n_gold": len(rels), "first_hit_rank": first_hit_rank(ranked, rels)}
         for k in ks:
-            m[f"ndcg_at_{k}"] = ndcg_at_k(ranked, rels, k)
-            m[f"recall_at_{k}"] = recall_at_k(ranked, rels, k)
-
-        prep_q.append(m)
-        q = catelog.quries.get(qid)
-        types = str(q.get('content_type') or [])
-
+            m[f"ndcg@{k}"] = ndcg_at_k(ranked, rels, k)
+            m[f"recall@{k}"] = recall_at_k(ranked, rels, k)
+        per_q.append(m)
+        q = cat.queries[qid]
+        types = set(q.get("content_type") or [])
         groups["text_only" if types <= {"Text", "Other"} else "has_visual"].append(m)
-
-        for t in type & VISUAL:
+        for t in types & VISUAL:
             groups[f"has_{t.lower()}"].append(m)
-
-        for qt in q.get("query_type") or []:
+        for qt in q.get("query_types") or []:
             groups[f"q_{qt}"].append(m)
-
         groups[f"n_gold_{min(len(rels), 4)}{'+' if len(rels) >= 4 else ''}"].append(m)
-
-        
-
-
-
+ 
     def agg(ms):
         n = len(ms)
-        out = {"n":n}
-
+        out = {"n": n}
         for k in ks:
             out[f"ndcg@{k}"] = round(sum(x[f"ndcg@{k}"] for x in ms) / n, 4)
             out[f"recall@{k}"] = round(sum(x[f"recall@{k}"] for x in ms) / n, 4)
-        out["mrr"] = round(sum(1 / x["first_hit_rank"] for x in ms if x["first_hit_rank"]) / n)
-
+        out["mrr"] = round(sum(1 / x["first_hit_rank"] for x in ms if x["first_hit_rank"]) / n, 4)
         return out
+ 
+    return {"config": config or {}, "aggregates": agg(per_q),
+            "by_group": {g: agg(ms) for g, ms in sorted(groups.items())}, "rows": per_q}
 
-    return {"config":config, "aggregates":agg(prep_q), "rows":prep_q, "by_group":{g:agg(ms) for g, ms in sorted(groups.items())}}
 
 def save_run(result: dict, name: str) -> Path:
     RUNS.mkdir(exist_ok=True)
@@ -179,12 +166,12 @@ if __name__ == "__main__":
     if cmd == "test":
         _tests()
     elif cmd == "dump":
-        cat = Catelog.load()
+        cat = Catalog.load()
         print(f"{len(cat.page_of)} pages, {len(cat.qrels)} queries with qrels, "
               f"{sum(len(v) for v in cat.qrels.values())} graded pairs")
         dump_page_images()
     elif cmd == "score":
-        cat = Catelog.load()
+        cat = Catalog.load()
         rows = [json.loads(l) for l in Path(sys.argv[2]).read_text().splitlines() if l.strip()]
         res = score_run(rows, cat, config={"source": sys.argv[2]})
         print_report(res)
