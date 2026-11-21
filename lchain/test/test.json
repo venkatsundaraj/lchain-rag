@@ -1,0 +1,64 @@
+{
+  "groups": {
+    "text_only": [
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      },
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      }
+    ],
+    "q_open-ended": [
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      },
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      }
+    ],
+    "n_gold_4+": [
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      },
+      {
+        "query_id": "100",
+        "n_gold": 14,
+        "first_hit_rank": null,
+        "ndcg@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@10": 0.0,
+        "recall@10": 0.0
+      }
+    ]
+  }
+}

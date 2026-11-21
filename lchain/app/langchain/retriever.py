@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     cat = Catalog.load()
     qids, qfilter = load_eval_queries(cat)
-    print(len(qids))
+    
     store = build_store(args.reindex)
     retriever = store.as_retriever(search_kewargs = {"k": args.k})
 

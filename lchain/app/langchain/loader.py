@@ -49,6 +49,7 @@ class Catalog:
                 qrels={q: {c: int(r) for c, r in d.items()} for q, d in raw["qrels"].items()},
                 queries=raw["queries"],
             )
+        
         from datasets import load_dataset
  
         corpus = load_dataset(REPO, "corpus", split="test", revision=REV).remove_columns("image")

@@ -48,7 +48,8 @@ if __name__ == "__main__":
     rows_v1 = [0, "", None, " ", 5]
     hit_at_k = sum(rows)/len(rows)
 
-    print(hit_at_k)
+    # print(hit_at_k)
+    print("one" in gold)
 
     item = next((i+1 for i, p in enumerate(x) if p in y), None)
 
