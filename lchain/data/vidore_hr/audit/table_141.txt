@@ -1,0 +1,58 @@
+Employment and Social Developments in Europe 2024 
+84 
+workers with additional capital. As a result, GDP is projected to increase by 0.18% in the long term, compared to 
+a scenario without any additional investment in young unemployed people (Chart 3.7). 
+Investments in skills enhance productivity 
+Regional investment in skills in the context of the European Social Fund Plus (ESF+) can lead to 
+significant increases in economic activity in the long term.  
+is used to simulate the potential regional macroeconomic impact of ESF+ investments in skills over the 2021 -
+2027 funding period, which are assumed to increase labour productivity ( Box A3.1 in the Annex).  (171) The 
+simulations illustrate that ESF+ funding for skills, in addition to the direct employment and social benefits 
+expected in the areas and sectors targeted by the projects financed, could increase EU GDP by up to 0.039% at 
+its peak in 2036 relative to baseline GDP ( Chart 3.8). GDP is expected to remain above its baseline level even 
+after expenditure on ESF+ terminates, as the structural effects of increased labour productivity and 
+corresponding adjustments by firms and households materialise. Overall, the initial cost of the measure, at less 
+than 0.035% of GDP per year, is more than offset by the long -term economic returns, which are significantly 
+larger than the original investment. 
+ 
+Chart 3.8 
+Investment in skills can lead to long-term GDP gains 
+Expenditure on skills-related ESF+ programmes over 2021-2027 programming period (% over baseline GDP) and expected impact of the investment on GDP (% deviation from baseline 
+GDP) 
+  
+Note: 
+  
+Source: JRC calculations based on RHOMOLO model. 
+Click here to download chart. 
+ 
+Targeted investments in skills can lead to employment gains throughout the funding period and in 
+the long-term. At their peak in 2026, EU -level employment gains are projected to be 0.024% compared to the 
+baseline scenario of no investment, with the largest employment gains expected for the lowest income quintiles 
+(Chart 3.9). (172) This impact is larger in regions with more significant investments.  (173) When the demand 
+stimulus related to the ESF+ funds ends, employment decreases and temporarily dips below its initial level,  (174) 
+before recovering and rising above the initial level in the long term.  (175) Developments in the unemployment rate 
+mirror these results, with decreases in unemployment rates projected in the short and long term, as vacancies for 
+upskilled individuals who benefitted from the programmes are filled (Chart 3.9). 
+ 
+(171) (Christou et al., 2024) 
+(172) The lower income quintiles also experience larger increases in real wages compared to the richest income quintile, as their labour 
+productivity increases relatively more. 
+(173) For instance, in the Bulgarian region BG31, Severozapaden, and the Portuguese region PT20, Região Autónoma dos Açores, impacts at 
+the peak are +0.195% and +0.185%, respectively. 
+(174) The temporary decrease in employment below initial levels stems from modelling specificities. In the model, agents are myopic and 
+make decisions based only on past and current economic conditions. Thus, they cannot anticipate the end of the monetary injection (at 
+the end of the implementation period), nor the full positive impact of the supply-side effects of the policy intervention that will 
+materialise in the future. The combination of positive shocks (increased government spending and increased productivity) and negative 
+shocks (contributions needed to finance the policy) together with the asymmetric nature of the shocks across regions and agents being 
+myopic can lead to a temporary negative effect at the end of the implementation period. 
+(175) Despite ESF+ spending of less than 0.1% of EU GDP for each year of the programming period, employment would still be 0.013% higher 
+than the baseline 20 years after the start of the programme.  
+0.00
+0.01
+0.02
+0.03
+0.04
+0.05
+2021 2022 2023 2024 2025 2026 2027 2028 2029 2030 2031 2032 2033 2034 2035 2036 2037 2038 2039 2040
+% deviation from baseline
+Cohesion Expenditure Changes in GDP compared to baseline

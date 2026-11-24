@@ -1,0 +1,49 @@
+Estimating labour market transition and skills investment needs of the green transition – a new approach 
+19 
+mining and quarrying (B05-09), manufacture of chemicals and chemical products (C20), 
+manufacture of other non-metallic mineral products (C23), manufacture of basic metals 
+(C24), manufacture of motor vehicles, trailers and semi-trailers (C24). 
+In this Box we use the Eurostat’s ‘labour market transitions’ statistics (42) for the custom 
+category of EII subsectors. The ‘ labour market transitions’ are experimental statistics 
+derived from the longitudinal component of the EU -LFS data. They identify the flows 
+between different labour market statuses between consecutive quarters.  
+The data show that that ‘energy intensive industries’ (EII)  (43) are overall less dynamic 
+than the total economy, both when it comes to remaining in employment, and when 
+considering transitions from employment towards inactivity and unemployment (Figure 
+9). During the 10 -year time span analysed, from 2014 to 2023, the share of workers in 
+EII who remained in employment (although not necessarily in the same sector of activity) 
+between one year and the next was constantly above that for the total economy. The  
+overall trend of both groups, however, is very similar (left -hand side in Figure 9). At the 
+same time, workers in EII experienced less outflows into inactivity and unemployment 
+(right-hand side in Figure 9).   
+Figure 9 Transitions from employment to employment (left) and employment to inactivity 
+and unemployment (right) in ‘energy -intensive industries’ (EII) and in the total economy, 
+2014-2023, EU27 
+ 
+ 
+ 
+ 
+ 
+Source: Experimental statistics on labour market transitions. Estimates developed by Eurostat, based on LFS longitudinal 
+data, custom extractions for ‘energy-intensive industries’. 
+ 
+Notes: For the sake of this chart ‘energy intensive industries’ (EII) are defined at the NACE 2 -digit level as: mining and 
+quarrying (B05 -09); manufacturing of other non -metallic minerals (C23); manufacturing of basic metals (C24); 
+manufacturing of chemicals (C 25); and manufacturing of motor vehicles, trailers and semi -trailers (C29). The full 
+methodology is explained on the Eurostat website (https://ec.europa.eu/eurostat/cache/metadata/en/lfsi_long_esms.htm). 
+“E_E” indicates employment to employment transitions meaning people employed either in EII or in the total economy in 
+t-1 who remained employed in t (but not necessarily in the same NACE sector); “E-I” indicates transitions from employment 
+to inactivity between t-1 and t; “E_U” indicates transitions from employment to unemployment between t-1 and t. Due to 
+limited reliability 2021 data cannot be presented. 
+ 
+Demographic profile of the workforce in EII is likely to be a factor behind the relative lower 
+mobility into unemployment and inactivity as they are relatively male dominated. 
+Nevertheless, less employment mobility in EII also corroborates the fact that th ese 
+sectors are characterised by a high degree of labour market stability, which is positive for 
+workers in terms of perceived job security, and can possibly be explained by the fact that 
+these are relatively well -paid industries in which wage premiums are  reported in some 
+ 
+(42)  Labour market transitions - LFS longitudinal data (lfsi_long) (europa.eu) 
+(43) Based on the greenhouse gas (GHG) emissions levels of their production or products, sectors considered energy intensive 
+are: mining and quarrying (B05 -09); manufacturing of other non-metallic minerals (C23); manufacturing of basic metals 
+(C24); manufacturing of chemicals (C25); and manufacturing of motor vehicles, trailers and semi-trailers (C29). 

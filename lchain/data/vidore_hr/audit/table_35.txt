@@ -1,0 +1,56 @@
+Estimating labour market transition and skills investment needs of the green transition – a new approach 
+39 
+ 
+Table 2: Median age in the ‘transforming sectors’ per Member State in 2022  
+ Member States (B) 
+Mining 
+and 
+quarrying 
+(C) 
+Manufacturing 
+(D) 
+Electricity, 
+gas, steam 
+and air 
+conditioning 
+supply 
+(E) Water 
+supply, 
+sewerage, 
+waste 
+management 
+and 
+remediation 
+activities 
+(F) 
+Construction 
+(H) 
+Transportation 
+and storage 
+AT 45 40 43 45 41 44 
+BE 36 44 42 43 40 43 
+BG 47 45 47 48 44 47 
+CY 34 43 50 42 43 43 
+DE 44 44 42 46 44 45 
+DK 51 46 44 50 41 47 
+EE 45 43 45 50 43 49 
+EL 39 44 44 50 46 46 
+ES 47 44 41 45 46 46 
+FI 38 43 41 42 42 43 
+FR 40 43 43 44 41 45 
+HR 43 41 48 44 42 44 
+HU 47 42 46 46 43 46 
+IT 45 45 43 49 46 46 
+LT 44 43 43 49 43 44 
+LU NA 46 39 41 46 41 
+LV 40 44 47 54 41 49 
+PL 41 42 46 45 41 43 
+PT 49 44 45 50 46 44 
+RO 46 44 49 45 43 43 
+SE 40 45 46 43 40 46 
+SI 43 43 46 46 42 45 
+EU27 43 44 44 46 43 45 
+ 
+Source: Own calculations based on EU LFS micro-data (2022 wave). 
+Notes: Data not available for CZ, IE, MT, NL and SK. 
+ 

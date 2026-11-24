@@ -1,0 +1,111 @@
+Employment and Social Developments in Europe 2024 
+34 
+national level, the nowcasted real income is estimated to increase in 16 countries, to remain stable in six 
+countries, and to decrease in five countries, (42) reflecting the heterogeneity of the impact of inflation across 
+countries. 
+4.2. Income inequality 
+Following a slight decrease in 2021 and 2022, 
+income inequality in the EU remained broadly static 
+in 2023 compared to 2022, despite the challenging 
+context. As a measure of inequality of income 
+distribution, the ratio of the total income received by 
+20% of the population with the lowest income (bottom 
+quintile) remained broadly stable, at 4.72 in 2023 (2022 
+incomes), compared to 4.74 in 2022 (2021 incomes). (43) 
+estimates of income quintile share ratio for the top and 
+bottom quintiles (S80/S20) nowcasting 2023 income. The 
+broad stability of income inequality during subsequent 
+crises reflects the large -scale support measures put in 
+place by Member States, with EU support, which 
+significantly mitigated negative effects. More generally, 
+income inequality would be much higher without the 
+redistributive effects of transfers (Chart 1.20). (44) 
+4.3. Risk of poverty and social exclusion 
+The AROPE rate decreased slightly in 2023 but 
+remains high for certain groups, including children 
+(0-17). The AROPE rate in the EU was 21.4% in 2023, a 
+slight decrease compared to the previous two years 
+(21.6% in 2022 and 21.7% in 2021) ( Chart 1.21). The 
+AROPE rate for children remained rather stable compared 
+to 2022, but increased from 24.0% in 2020 to 24.8% in 
+2023. In line with the trend in previous years, the share 
+of people at risk of poverty or social exclusion in 2023 
+was higher for women (22.4%) than for men (20.3%). 
+Young adults aged 18 -24 (26.1%), people with a low 
+level of educational attainment (34.5%), people with 
+disabilities (28.8%), non -EU citizens (45.5%), and 
+unemployed people (66.3%) experienced particularly high 
+risks of poverty or social exclusion.  
+Progress towards the EU 2030 poverty reduction 
+target is advancing but remains limited for 
+children. The EU 2030 target foresees lifting at least 15 
+million people out of poverty or social exclusion compared to 2019, including at least five million children. An 
+estimated 93.9 million people in the EU experienced poverty or social exclusion in 2023, 19.7 million of whom 
+were children under 18 years old. As socioeconomic conditions recover from the COVID -19 pandemic and energy 
+crises, the AROPE rate experienced some improvements in 2023, showing a decrease of 0.6 million people from 
+2022 and a decrease of 1.6 million people from 2019. However, trends in the AROPE rate for children point to 
+very slow improvements in 2023, pointing to the higher vulnerability of this group to the recent cost -of-living 
+crisis. The number of children at risk of poverty or social exclusion decreased by 0.1 million compared to 2022 
+ 
+(42) Stable: Denmark, Croatia, Cyprus, Latvia, Malta, Austria and Sweden. Decrease: Czechia, Germany, France, Italy, and Hungary. Increase: 
+Belgium, Bulgaria, Estonia, Ireland, Greece, Spain, Lithuania, Luxembourg, the Netherlands, Poland, Portugal, Romania, Slovenia, Slovakia, 
+Finland. 
+(43) EU-SILC indicators provide insights on the economic wellbeing and other living conditions on EU residents based on data collected during 
+a specific year, denoted as N. This data encompasses both the characteristics of households for that year (N) and the income from the 
+preceding year, N-1. The income for year N-1 is an estimate for income of year N within EU-SILC. To take into account differences in 
+household size and composition and thus enable comparisons of income levels, the concept of equivalised disposable income is used. It 
+is based on the total net (also referred to as disposable) household income divided by the number of 'equivalent adults', using a 
+standard (equivalence) scale.  
+(44) These effects are represented by the difference between the GINI coefficient before and after social transfers. 
+ 
+Chart 1.20 
+Social transfers reduced inequalities 
+Disposable income quintile share (S80/S20) (left-hand side) and Gini coefficient 
+before and after social transfers (excluding pensions) (right-hand side), 2015-2023, 
+EU 
+      
+Note: Year refers to EU Survey on income and Living Conditions (EU-SILC) survey 
+year; income from previous year. Break in time series in 2020 due to major 
+methodological changes (especially in Germany). 
+Source: Eurostat, EU SILC [ILC_DI11] [ILC_DI12] [ILC_DI12C]. 
+Click here to download chart. 
+ 
+ 
+Chart 1.21 
+At risk of poverty or social exclusion rate decreased 
+slightly from 2020-2023, but increased for children 
+AROPE rate, AROP rate, severe material and social deprivation (SMSD) rate (% of 
+population), share of people living in very low work intensity (VLWI) households (% of 
+population aged 0-64), 2015-2023, EU 
+      
+Note: Year refers to: EU-SILC survey year; income from previous year; AROPE, AROP: 
+income from previous year; SMSD: current year; VLWI: status in the past year. 
+Values for AROP between 2015-2018 are estimated. AROPE and AROP break in 
+time series in 2020. 
+Source: Eurostat, EU SILC [ILC_PEPS01N] [ILC_LI02] [ILC_MDSD11] [ILC_LVHL11N]. 
+Click here to download chart. 
+ 
+25
+30
+35
+40
+0
+2
+4
+6
+8
+10
+2015 2016 2017 2018 2019 2020 2021 2022 2023
+Gini coeff. of equiv. disp. income bef. social transf. (rhs)
+Gini coeff. of equivalised disposable income (rhs)
+S80/S20 for disposable income (lhs)
+0
+10
+20
+30
+2015 2016 2017 2018 2019 2020 2021 2022 2023
+At-risk-of-poverty-or-social-exclusion
+At-risk-of-poverty
+People living in very low work intensity households (0-64)
+Severe material and social deprivation
+At-risk-of-poverty-or-social-exclusion of children

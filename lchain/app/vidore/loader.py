@@ -80,9 +80,8 @@ def dump_page_images():
     corpus = load_dataset(REPO, "corpus", split="test", revision=REV)
 
     for c in corpus:
-        img = out / f"{c["image"]}.png"
-
-        if img.exists():
+        img = out / f"{c['corpus_id']}.png"
+        if not img.exists():
             c["image"].save(img)
 
     print(f"{len(corpus)} page images in {out}")
