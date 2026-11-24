@@ -1,6 +1,6 @@
 from datasets import load_dataset
-from app.langchain.retriever import build_store
-from app.langchain.loader import Catalog
+from lchain.app.vidore.retriever import build_store
+from lchain.app.vidore.loader import Catalog
 from pathlib import Path
 from collections import Counter
 from app.langchain.helpers.metrics import dedupe_keep_order, first_hit_rank, recall_at_k, ndcg_at_k, dcg

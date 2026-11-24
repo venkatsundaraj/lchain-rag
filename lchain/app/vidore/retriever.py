@@ -1,5 +1,5 @@
 
-from app.langchain.loader import Catalog, REPO, REV, score_run, print_report, save_run
+from lchain.app.vidore.loader import Catalog, REPO, REV, score_run, print_report, save_run
 import json
 from pathlib import Path
 from collections import Counter
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     qids, qfilter = load_eval_queries(cat)
     
     store = build_store(args.reindex)
-    retriever = store.as_retriever(search_kewargs = {"k": args.k})
+    retriever = store.as_retriever(search_kwargs={"k": args.k})
 
     rows, unmapped = [], Counter()
     for i, id in enumerate(qids, 1):
@@ -92,15 +92,15 @@ if __name__ == "__main__":
 
         ranked = []
         for d in docs:
-            cid = cat.id_of[(Path(d.metadata["source"]).name, int(d.metadata["page"]))]
+            cid = cat.corpus_id_of(Path(d.metadata["source"]).name, int(d.metadata["page"]))
             if cid is None:
                 unmapped[(Path(d.metadata["source"]), int(d.metadata["page"]))] += 1
             else:
                 ranked.append(cid)
 
-            rows.append({"query_id":id, "ranked":ranked})
+        rows.append({"query_id":id, "ranked":ranked})
 
-            if i % 50 == 0:
+        if i % 50 == 0:
                 print(f"  {id}/{len(qids)}")
 
 

@@ -124,7 +124,16 @@ def score_run(rows: list[dict], cat: Catalog, ks=(5, 10), config: dict | None = 
  
     return {"config": config or {}, "aggregates": agg(per_q),
             "by_group": {g: agg(ms) for g, ms in sorted(groups.items())}, "rows": per_q}
-
+ 
+ 
+def save_run(result: dict, name: str) -> Path:
+    RUNS.mkdir(exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    p = RUNS / f"{stamp}_{name}.json"
+    result["config"]["timestamp"] = datetime.now(timezone.utc).isoformat()
+    p.write_text(json.dumps(result, indent=2, ensure_ascii=False))
+    return p
+ 
 
 def save_run(result: dict, name: str) -> Path:
     RUNS.mkdir(exist_ok=True)

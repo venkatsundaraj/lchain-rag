@@ -1,5 +1,7 @@
 # ViDoRe V3 (HR) — task list
 
+## hello world
+
 **Project:** retrieval evals, then generation + verification, on `vidore/vidore_v3_hr` — 14 documents, 1,110 pages, 318 human-annotated queries with graded relevant pages (0/1/2), bounding boxes and reference answers.
 **Yardstick (paper, nDCG@10 on HR):** BM25 12.8 · BGE-M3 42.4 · Jina-v4 text 52.8 · ColEmbed-3B-v2 visual 62.3 · Jina-v4 text + zerank-2 reranker **66.5** · visual + reranker 56.0 (hurt).
 **Rules carried over:** measure first; one variable per run; every run saved as a stamped JSON with config + per-query rows; a number that doesn't move is a negative result, logged and reverted; scrutinize the instrument before the system.
@@ -42,13 +44,13 @@
       _P1 vs now:_ citations are pages, not chunk ids; `cited ⊆ retrieved` invariant still applies.
 
 - [ ] **Day 10 — Correctness judge.** Cross-family judge (Claude) scores each answer against the reference: correct / partial / incorrect. Run it 3× on a 50-query slice to report judge variance first.
-      _Metric:_ % correct, by query_type; variance. _P1 vs now:_ P1 had no reference answers — faithfulness only; here correctness is measurable and the paper reports ~52–55% on hard queries.
+      _Metric:_ % correct, by query*type; variance. \_P1 vs now:* P1 had no reference answers — faithfulness only; here correctness is measurable and the paper reports ~52–55% on hard queries.
 
 - [ ] **Day 11 — Image context.** Same generation with page images (VLM) and with text+image. Three configs, one judge.
       _Metric:_ % correct delta (paper: image +2.5 on hard queries). _P1 vs now:_ the generator sees pictures for the first time.
 
-- [ ] **Day 12 — Claims dataset (page-level evidence).** ~80 claims: extract from generated answers of 20 queries (mix of content types), label supported / contradicted / no_evidence with evidence = `(file, page)` and, where it's a figure, the bbox from the benchmark. Reuse `validate_claims.py` with a page-exists check instead of a quote check.
-      _P1 vs now:_ evidence quotes don't exist for charts; the pointer replaces the quote.
+- [ ] **Day 12 — Claims dataset (page-level evidence).** ~80 claims: extract from generated answers of 20 queries (mix of content types), label supported / contradicted / no*evidence with evidence = `(file, page)` and, where it's a figure, the bbox from the benchmark. Reuse `validate_claims.py` with a page-exists check instead of a quote check.
+      \_P1 vs now:* evidence quotes don't exist for charts; the pointer replaces the quote.
 
 - [ ] **Day 13 — Port `app/verify`, text judge.** Claims → claim-as-query over the best retriever → entailment with page text. Oracle vs retrieved.
       _Metric:_ false-supported rate; confusion matrix. _P1 vs now:_ same core, new evidence type; the boundary rule pays off here.
