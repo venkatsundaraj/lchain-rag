@@ -28,6 +28,13 @@ REPO = "vidore/vidore_v3_hr"
 REV = "main" 
 RUNS = Path("vidore_runs")
 
+PDF_DIR = Path("data/pdfs")
+
+_rp = DATA / "page_remap.json"
+REMAP = json.loads(_rp.read_text()) if _rp.exists() else {}
+
+
+
 @dataclass
 class Catalog:
     page_of: dict[str, tuple[str, int]]          # corpus_id -> (file_name, page_number_in_doc)
@@ -36,6 +43,11 @@ class Catalog:
     queries: dict[str, dict]                     # query_id -> {query, answer, content_type, query_types}
  
     def corpus_id_of(self, file_name: str, page: int) -> str | None:
+        rm = REMAP.get(file_name)
+        if rm is not None:
+            page = rm.get(str(page))
+            if page is None:
+                return None           # a page the benchmark doesn't have -> counts as unmapped
         return self.id_of.get((file_name, page))
  
     @classmethod

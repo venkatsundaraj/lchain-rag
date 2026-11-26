@@ -1,5 +1,5 @@
 
-from lchain.app.vidore.loader import Catalog, REPO, REV, score_run, print_report, save_run
+from app.vidore.loader import Catalog, REPO, REV, score_run, print_report, save_run
 import json
 from pathlib import Path
 from collections import Counter
@@ -7,7 +7,10 @@ from app.config import settings
 
 
  
-CONFIG = "v0_pypdf_recursive_1000"
+COLLECTION = "v0_pypdf_recursive_1000"
+RUN_NAME   = "v0_pypdf_chunks"
+CHUNKING   = "recursive_1000_200"      # "page" | "recursive_1000_200"
+
 PDF_DIR = Path("data/pdfs")
 RUNS = Path("vidore_runs")
 N_CHUNKS = 20
@@ -50,7 +53,7 @@ def build_store(reindex: bool):
  
     store = PGVector(
         embeddings=OpenAIEmbeddings(model="text-embedding-3-small", api_key=settings.OPENAI_API_KEY),
-        collection_name=CONFIG,
+        collection_name=COLLECTION,
         use_jsonb=True,
         connection=settings.DATABASE_URL,
         pre_delete_collection=reindex,
@@ -58,13 +61,19 @@ def build_store(reindex: bool):
     if reindex:
         from langchain_community.document_loaders import PyPDFLoader
         from langchain_text_splitters import RecursiveCharacterTextSplitter
- 
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-        chunks = []
+
+        docs = []
         for pdf in sorted(PDF_DIR.glob("*.pdf")):
-            chunks += splitter.split_documents(PyPDFLoader(str(pdf)).load())
+            docs += PyPDFLoader(str(pdf)).load()                 # one Document per page
+
+        if CHUNKING == "page":
+            chunks = [d for d in docs if d.page_content.strip()]
+        else:
+            splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            chunks = splitter.split_documents(docs)
+
         store.add_documents(chunks)
-        print(f"indexed {len(chunks)} chunks")
+        print(f"indexed {len(chunks)} units ({CHUNKING})")
     return store
  
     
@@ -78,7 +87,12 @@ if __name__ == "__main__":
     ar = argparse.ArgumentParser()
     ar.add_argument('--reindex', action="store_true")
     ar.add_argument('--k', type=int, default=N_CHUNKS)
+    ar.add_argument('--collection', default=COLLECTION)
+    ar.add_argument('--run', default=RUN_NAME)
+    ar.add_argument('--chunking', default=CHUNKING, choices=["page", "recursive_1000_200"])
+
     args = ar.parse_args()
+    COLLECTION, RUN_NAME, CHUNKING = args.collection, args.run, args.chunking
 
     cat = Catalog.load()
     qids, qfilter = load_eval_queries(cat)
@@ -104,22 +118,29 @@ if __name__ == "__main__":
                 print(f"  {id}/{len(qids)}")
 
 
+   
+
     print(f"\nunmapped chunks: {sum(unmapped.values())} "
           f"(should be 0; if many, your page index is off by one)")
     for (f, p), n in unmapped.most_common(5):
         print(f"   {f} p{p}: {n}")
 
+    n_ranked = sum(len(r["ranked"]) for r in rows)
+    assert n_ranked > 0, "retriever returned nothing — wrong collection name or empty index?"
+    print(f"ranked ids: {n_ranked} across {len(rows)} queries")
+
     RUNS.mkdir(exist_ok=True)
-    raw = RUNS / f"{CONFIG}.jsonl"
+    raw = RUNS / f"{RUN_NAME}.jsonl"
     raw.write_text("\n".join(json.dumps(r) for r in rows))
  
     result = score_run(rows, cat, config={
-        "name": CONFIG, "retriever": "vector", "embedding": "text-embedding-3-small",
-        "parser": "pypdf", "chunking": "recursive_1000_200", "k_chunks": args.k,
+        "name": RUN_NAME, "collection": COLLECTION, "retriever": "vector",
+        "embedding": "text-embedding-3-small", "parser": "pypdf",
+        "chunking": CHUNKING, "k_chunks": args.k,
         "query_filter": qfilter, "n_queries": len(rows),
     })
     print_report(result)
-    print("saved:", save_run(result, CONFIG))
+    print("saved:", save_run(result, RUN_NAME))
 
    
 
@@ -128,3 +149,6 @@ if __name__ == "__main__":
     
 
 
+
+# python -m app.vidore.retriever --collection v0_pypdf_recursive_1000 --run v0_pypdf_chunks --chunking recursive_1000_200
+# python -m app.vidore.retriever --collection v1_pypdf_page            --run v1_pypdf_page  --chunking page
